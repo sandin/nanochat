@@ -92,7 +92,7 @@ def download_single_file(index):
         return True
 
     # Construct the remote URL for this file
-    url = f"{BASE_URL}/{filename}"
+    url = f"{BASE_URL}/{filename}?download=true"
     print(f"Downloading {filename}...")
 
     # Download with retries
