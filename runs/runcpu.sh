@@ -40,8 +40,8 @@ python -m scripts.base_train \
     --eval-tokens=524288 \
     --core-metric-every=-1 \
     --sample-every=100 \
-    --num-iterations=10000 \
-    --resume-from-step=5000 \
+    --num-iterations=15000 \
+    --resume-from-step=10000 \
     --run=$WANDB_RUN
 exit # FIXME: delete me
 python -m scripts.base_eval --device-batch-size=1 --split-tokens=16384 --max-per-task=16
