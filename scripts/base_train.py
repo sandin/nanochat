@@ -420,11 +420,15 @@ while True:
     # once in a while: evaluate the val bpb (all ranks participate)
     if args.eval_every > 0 and (last_step or step % args.eval_every == 0):
         model.eval()
+        eval_t0 = time.time()
         val_loader = build_val_loader()
         eval_steps = args.eval_tokens // (args.device_batch_size * args.max_seq_len * ddp_world_size)
         with disable_fp8(model):
             val_bpb = evaluate_bpb(model, val_loader, eval_steps, token_bytes)
-        print0(f"Step {step:05d} | Validation bpb: {val_bpb:.6f}")
+        eval_dt = time.time() - eval_t0
+        train_step_dt = total_training_time / (step - 10) if step > 10 else None
+        train_step_dt_str = f"{train_step_dt:.2f}s" if train_step_dt is not None else "n/a"
+        print0(f"Step {step:05d} | Validation bpb: {val_bpb:.6f} | eval_dt: {eval_dt:.2f}s | avg_train_step_dt: {train_step_dt_str}")
         if val_bpb < min_val_bpb:
             min_val_bpb = val_bpb
         wandb_run.log({
